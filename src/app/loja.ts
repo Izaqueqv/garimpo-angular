@@ -38,8 +38,6 @@ export class Loja {
   favoritar = (p: Produto) => this.favoritos.update(f => this.favorito(p) ? f.filter(id => id !== p.id) : [...f, p.id]);
 }
 
-// Proteção de rotas: só entra quem está logado (e, no painel, só administrador).
-export const logado: CanActivateFn = (_, estado) =>
-  !!inject(Loja).usuario() || inject(Router).createUrlTree(['/entrar'], { queryParams: { voltar: estado.url } });
+// Proteção de rotas: o painel só abre para administrador; os outros vão para o login.
 export const admin: CanActivateFn = (_, estado) =>
   inject(Loja).usuario()?.perfil === 'admin' || inject(Router).createUrlTree(['/entrar'], { queryParams: { voltar: estado.url, restrito: 1 } });
