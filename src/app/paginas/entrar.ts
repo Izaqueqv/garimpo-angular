@@ -1,6 +1,7 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { API, Loja, Usuario } from '../loja';
 
 @Component({
@@ -42,7 +43,7 @@ export class Entrar {
   enviar() {
     const { nome, email, senha } = this.form.getRawValue();
     if (this.form.invalid || (this.cadastro() && !nome)) return this.erro.set('Preencha os campos: e-mail válido e senha com 6 ou mais caracteres.');
-    const pedido = this.cadastro()
+    const pedido: Observable<Usuario | Usuario[]> = this.cadastro()
       ? this.loja.http.post<Usuario>(API + 'usuarios', { nome, email, senha, perfil: 'cliente' })
       : this.loja.http.get<Usuario[]>(API + `usuarios?email=${email}&senha=${senha}`);
     pedido.subscribe(r => {
