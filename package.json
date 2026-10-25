@@ -1,6 +1,6 @@
 {
   "name": "garimpo",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "dev": "concurrently -k -n api,app \"npm run api\" \"npm start\"",
     "start": "ng serve",
@@ -26,5 +26,8 @@
     "concurrently": "^10.0.6",
     "json-server": "^1.0.0-beta.3",
     "typescript": "~6.0.2"
+  },
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
   }
 }
