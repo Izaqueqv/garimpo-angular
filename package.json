@@ -2,10 +2,10 @@
   "name": "garimpo",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
+    "dev": "concurrently -k -n api,app \"npm run api\" \"npm start\"",
     "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development"
+    "api": "json-server db.json --port 3000",
+    "build": "ng build"
   },
   "private": true,
   "packageManager": "npm@10.9.9",
@@ -25,7 +25,6 @@
     "@angular/compiler-cli": "^22.2.0",
     "concurrently": "^10.0.6",
     "json-server": "^1.0.0-beta.3",
-    "prettier": "^3.8.1",
     "typescript": "~6.0.2"
   }
 }
