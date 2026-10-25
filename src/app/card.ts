@@ -1,10 +1,11 @@
 import { Component, inject, input } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ESTADOS, Loja, Produto } from './loja';
 
 @Component({
   selector: 'app-card',
-  imports: [RouterLink],
+  imports: [RouterLink, CurrencyPipe],
   template: `
     @let p = produto();
     <article class="card" [class.card--vendida]="p.vendida">
@@ -17,7 +18,7 @@ import { ESTADOS, Loja, Produto } from './loja';
           <span class="card__marca">{{ p.marca }}</span>
           <span class="card__nome">{{ p.nome }}</span>
           <span class="card__meta">Tam. {{ p.tam }} · {{ estados[p.estado] }}</span>
-          <span class="card__preco">R$ {{ p.preco }}</span>
+          <span class="card__preco">{{ p.preco | currency }}</span>
         </div>
       </a>
       <button class="fav-btn" [attr.aria-pressed]="loja.favorito(p)" (click)="loja.favoritar(p)" aria-label="Favoritar">♥</button>

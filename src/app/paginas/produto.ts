@@ -1,11 +1,12 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject, input, linkedSignal } from '@angular/core';
+import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { httpResource } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { API, CATS, ESTADOS, Loja, Produto } from '../loja';
 
 // Componente de detalhe da peça (rota produto/:id).
 @Component({
-  imports: [RouterLink],
+  imports: [RouterLink, CurrencyPipe, DecimalPipe],
   template: `
     @if (produto.value(); as p) {
       <div class="wrap pagina">
@@ -22,14 +23,14 @@ import { API, CATS, ESTADOS, Loja, Produto } from '../loja';
           <div class="info">
             <span class="rotulo texto-2">{{ p.marca }}</span>
             <h1>{{ p.nome }}</h1>
-            <div class="info__preco"><b>R$ {{ p.preco }}</b><span>ou 3x de R$ {{ (p.preco / 3).toFixed(2) }} sem juros</span></div>
+            <div class="info__preco"><b>{{ p.preco | currency }}</b><span>ou 3x de {{ p.preco / 3 | currency }} sem juros</span></div>
             <div class="aviso"><strong>Só existe 1.</strong> Quando alguém compra, ela sai do site.</div>
             <div class="blocos">
               <div class="bloco"><span class="rotulo texto-2">Tamanho</span><b>{{ p.tam }}</b></div>
               <div class="bloco"><span class="rotulo texto-2">Estado</span><b>{{ estados[p.estado] }}</b></div>
             </div>
             <div class="medidas"><h2>Medidas reais (cm)</h2>
-              <table><tbody>@for (m of p.medidas; track m[0]) { <tr><th>{{ m[0] }}</th><td>{{ m[1] }}</td></tr> }</tbody></table>
+              <table><tbody>@for (m of p.medidas; track m[0]) { <tr><th>{{ m[0] }}</th><td>{{ m[1] | number }}</td></tr> }</tbody></table>
             </div>
             <div class="acoes">
               @if (p.vendida) { <button class="btn btn--bloco" disabled>Peça vendida</button> }
@@ -51,7 +52,7 @@ export class ProdutoPagina {
   id = input.required<string>();
   produto = httpResource<Produto>(() => API + 'produtos/' + this.id());
   loja = inject(Loja);
-  foto = signal(0);
+  foto = linkedSignal({ source: this.id, computation: () => 0 }); // volta para a 1ª foto ao trocar de peça
   estados = ESTADOS;
   cats = CATS;
 }
