@@ -1,10 +1,11 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { API, Loja } from '../loja';
 
 @Component({
-  imports: [RouterLink],
+  imports: [RouterLink, CurrencyPipe],
   template: `
     <div class="wrap pagina">
       <h1 class="titulo-1">Sua sacola</h1>
@@ -24,7 +25,7 @@ import { API, Loja } from '../loja';
                   <div class="item__corpo">
                     <div><a class="item__nome" [routerLink]="'/produto/' + p.id">{{ p.nome }}</a><span class="card__meta">Tam. {{ p.tam }} · Peça única</span>
                       <button class="remover" (click)="loja.remover(p)">Remover</button></div>
-                    <span class="item__preco">R$ {{ p.preco }}</span>
+                    <span class="item__preco">{{ p.preco | currency }}</span>
                   </div>
                 </li>
               }
@@ -33,15 +34,15 @@ import { API, Loja } from '../loja';
           <aside class="resumo">
             <h2>Resumo</h2>
             <label class="campo-label">CEP <input class="campo" #cep maxlength="9" placeholder="00000-000" (change)="buscarCep(cep.value)"></label>
-            @if (endereco()) { <p class="msg">{{ endereco() }} · frete R$ {{ frete() }}</p> }
+            @if (endereco()) { <p class="msg">{{ endereco() }} · frete {{ frete() | currency }}</p> }
             <label class="campo-label">Cupom <input class="campo" #c placeholder="GARIMPO10" (change)="cupom.set(c.value.toUpperCase())"></label>
             @if (cupom() && !desconto()) { <p class="erro">Cupom inválido.</p> }
             <dl class="resumo__linhas">
-              <div><dt>Subtotal</dt><dd>R$ {{ subtotal() }}</dd></div>
-              <div><dt>Desconto</dt><dd>− R$ {{ desconto().toFixed(2) }}</dd></div>
-              <div><dt>Frete</dt><dd>R$ {{ frete() }}</dd></div>
+              <div><dt>Subtotal</dt><dd>{{ subtotal() | currency }}</dd></div>
+              <div><dt>Desconto</dt><dd>− {{ desconto() | currency }}</dd></div>
+              <div><dt>Frete</dt><dd>{{ frete() | currency }}</dd></div>
             </dl>
-            <div class="total"><span>Total</span><b>R$ {{ total().toFixed(2) }}</b></div>
+            <div class="total"><span>Total</span><b>{{ total() | currency }}</b></div>
             <button class="btn btn--primario btn--bloco" (click)="finalizar()">Finalizar compra →</button>
           </aside>
         </div>
@@ -61,7 +62,10 @@ export class Sacola {
     const s = Math.max(0, Math.floor((this.loja.reservaAte() - this.agora()) / 1000));
     return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
   });
-  constructor() { setInterval(() => this.agora.set(Date.now()), 1000); }
+  constructor() {
+    const relogio = setInterval(() => this.agora.set(Date.now()), 1000);
+    inject(DestroyRef).onDestroy(() => clearInterval(relogio));
+  }
 
   // Endereço pela API ViaCEP; o valor do frete é simulado pela região do CEP.
   buscarCep(cep: string) {

@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, linkedSignal } from '@angular/core';
 import { httpResource } from '@angular/common/http';
 import { API, CATS, ESTADOS, Loja, Produto } from '../loja';
 import { Card } from '../card';
@@ -21,12 +21,12 @@ import { Card } from '../card';
               <label class="check"><input type="radio" name="estado" [checked]="estado() === e" (change)="estado.set(e)">{{ estados[e] }}</label>
             }
           </fieldset>
-          <fieldset><legend>Preço máximo (R$)</legend><input class="campo" type="number" (input)="max.set(+$any($event.target).value)"></fieldset>
+          <fieldset><legend>Preço máximo (R$)</legend><input class="campo" type="number" [value]="max() || ''" (input)="max.set(+$any($event.target).value)"></fieldset>
           <button class="link-btn" (click)="tam.set(''); estado.set(0); max.set(0)">Limpar filtros</button>
         </aside>
         <section class="resultados">
           <label class="ordenar">Ordenar por
-            <select (change)="ordem.set($any($event.target).value)">
+            <select [value]="ordem()" (change)="ordem.set($any($event.target).value)">
               <option value="">Mais recentes</option><option value="menor">Menor preço</option><option value="maior">Maior preço</option>
             </select>
           </label>
@@ -43,7 +43,11 @@ export class Catalogo {
   loja = inject(Loja);
   estados = ESTADOS;
   produtos = httpResource<Produto[]>(() => API + 'produtos');
-  tam = signal(''); estado = signal(0); max = signal(0); ordem = signal('');
+  // Filtros voltam ao padrão quando muda a categoria (o componente é reaproveitado pelo router).
+  tam = linkedSignal({ source: this.cat, computation: () => '' });
+  estado = linkedSignal({ source: this.cat, computation: () => 0 });
+  max = linkedSignal({ source: this.cat, computation: () => 0 });
+  ordem = linkedSignal({ source: this.cat, computation: () => '' });
   titulo = computed(() => this.cat() === 'busca' ? `Busca: “${this.q()}”` : CATS[this.cat()] ?? this.cat()[0].toUpperCase() + this.cat().slice(1));
   base = computed(() => (this.produtos.value() ?? []).filter(p => {
     const c = this.cat();

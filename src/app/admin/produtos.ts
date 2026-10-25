@@ -1,11 +1,12 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
 import { httpResource } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { API, CATS, Loja, Produto } from '../loja';
 
 // Gestão de produtos: consulta, pesquisa e remoção.
 @Component({
-  imports: [RouterLink],
+  imports: [RouterLink, CurrencyPipe],
   template: `
     <h1 class="titulo-1">Produtos</h1>
     <div class="painel">
@@ -15,7 +16,7 @@ import { API, CATS, Loja, Produto } from '../loja';
         @for (p of lista(); track p.id) {
           <tr>
             <td><img [src]="'img/' + p.fotos[0] + '.jpg'" alt=""></td><td>{{ p.nome }}</td><td>{{ cats[p.cat] }}</td><td>{{ p.tam }}</td>
-            <td>R$ {{ p.preco }}</td><td>{{ p.vendida ? 'Vendida' : 'Disponível' }}</td>
+            <td>{{ p.preco | currency }}</td><td>{{ p.vendida ? 'Vendida' : 'Disponível' }}</td>
             <td><a [routerLink]="'/admin/produto/' + p.id">Editar</a> · <button class="link-btn" (click)="remover(p)">Remover</button></td>
           </tr>
         }

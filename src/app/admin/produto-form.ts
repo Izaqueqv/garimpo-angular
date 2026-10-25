@@ -49,8 +49,12 @@ export class ProdutoForm {
   addMedida(nome = '', valor = 0) { this.medidas.push(this.fb.group({ 0: [nome], 1: [valor] })); }
 
   constructor() {
+    // Ao trocar de "editar" para "nova peça" o componente é reaproveitado, então o formulário é limpo antes.
     effect(() => {
-      if (this.id() !== 'novo') this.loja.http.get<Produto>(API + 'produtos/' + this.id()).subscribe(p => {
+      const id = this.id();
+      this.form.reset();
+      this.medidas.clear();
+      if (id !== 'novo') this.loja.http.get<Produto>(API + 'produtos/' + id).subscribe(p => {
         this.form.patchValue({ ...p, foto: p.fotos[0] });
         p.medidas.forEach(m => this.addMedida(...m));
       });
@@ -62,7 +66,7 @@ export class ProdutoForm {
     const { foto, medidas, ...v } = this.form.getRawValue();
     const dados = { ...v, fotos: [foto], medidas: medidas.map((m: any) => [m[0], m[1]]) };
     const req = this.id() === 'novo'
-      ? this.loja.http.post(API + 'produtos', { ...dados, vendida: false, vintage: false, badge: '', favs: 0, criado: new Date().toISOString().slice(0, 10) })
+      ? this.loja.http.post(API + 'produtos', { ...dados, vendida: false, vintage: false, badge: '', favs: 0 })
       : this.loja.http.patch(API + 'produtos/' + this.id(), dados);
     req.subscribe(() => this.router.navigate(['/admin/produtos']));
   }

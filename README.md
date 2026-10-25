@@ -6,6 +6,8 @@ Projeto da disciplina Desenvolvimento Web Front-End (Universidade FUMEC). Brech�
 
 ## Como rodar
 
+Precisa do **Node.js 24.15 ou mais novo** (versão LTS em [nodejs.org](https://nodejs.org)). Confira com `node -v`.
+
 ```bash
 npm install
 npm run dev
@@ -15,6 +17,8 @@ O comando `dev` sobe a API (JSON-Server em http://localhost:3000) e o site (http
 Também dá para rodar separado: `npm run api` e `npm start`.
 
 **Login de teste:** `admin@garimpo.com` / `admin123` (administrador) ou `cliente@garimpo.com` / `cliente123`.
+
+> As contas acima são fictícias e servem só para testar o projeto, que roda localmente. O JSON-Server é uma API de desenvolvimento: guarda as senhas em texto e não tem autenticação no servidor. Em um sistema real, as senhas ficariam criptografadas (hash) em um back-end próprio, que também validaria o acesso ao painel.
 
 ## Telas
 

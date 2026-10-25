@@ -7,7 +7,7 @@ export const ESTADOS = ['', 'Com marcas de uso', 'Bom estado', 'Ótimo estado', 
 export const CATS: Record<string, string> = { roupas: 'Roupas', casacos: 'Casacos', acessorios: 'Acessórios', calcados: 'Calçados' };
 export interface Produto {
   id: string; nome: string; marca: string; cat: string; tipo: string; tam: string; estado: number; preco: number; fotos: string[];
-  medidas: [string, number][]; desc: string; uso: string; vintage: boolean; badge: string; vendida: boolean; favs: number; criado: string;
+  medidas: [string, number][]; desc: string; uso: string; vintage: boolean; badge: string; vendida: boolean; favs: number;
 }
 export interface Usuario { id: string; nome: string; email: string; perfil: 'cliente' | 'admin' }
 
