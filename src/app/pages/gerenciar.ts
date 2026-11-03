@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Produto, ProdutoService } from '../services/produto.service';
 import { CurrencyPipe } from '@angular/common';
@@ -34,6 +35,7 @@ import { CurrencyPipe } from '@angular/common';
         <label>Descrição
           <input name="descricao" [(ngModel)]="produto.descricao">
         </label>
+        @if (erro) { <p class="erro">Preencha nome, tamanho, imagem e um preço maior que zero.</p> }
         <div class="acoes">
           <button class="botao" type="submit">{{ editando ? 'Salvar alterações' : 'Cadastrar produto' }}</button>
           @if (editando) { <button class="botao secundario" type="button" (click)="limpar()">Cancelar</button> }
@@ -55,19 +57,26 @@ import { CurrencyPipe } from '@angular/common';
     </section>
   `
 })
-export class Gerenciar {
+export class Gerenciar implements OnInit {
   produtos = inject(ProdutoService);
   editando = false;
+  erro = false;
   produto: Produto = this.novoProduto();
+  private rota = inject(ActivatedRoute);
+
+  // Ao vir da página de detalhe (/gerenciar?editar=ID), já abre o produto para edição.
+  ngOnInit(): void {
+    const item = this.produtos.buscar(Number(this.rota.snapshot.queryParamMap.get('editar')));
+    if (item) this.editar(item);
+  }
 
   novoProduto(): Produto {
     return { id: 0, nome: '', categoria: 'Roupas', tamanho: 'M', preco: 0, imagem: '', descricao: '' };
   }
 
   salvar(): void {
-    if (!this.produto.nome || !this.produto.tamanho || this.produto.preco <= 0 || !this.produto.imagem) {
-      return;
-    }
+    this.erro = !this.produto.nome || !this.produto.tamanho || this.produto.preco <= 0 || !this.produto.imagem;
+    if (this.erro) return;
 
     if (this.editando) {
       this.produtos.atualizar(this.produto);
@@ -92,5 +101,6 @@ export class Gerenciar {
   limpar(): void {
     this.produto = this.novoProduto();
     this.editando = false;
+    this.erro = false;
   }
 }
