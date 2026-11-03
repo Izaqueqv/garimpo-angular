@@ -1,6 +1,7 @@
 # garimpo · brechó online
 
-Projeto da disciplina Desenvolvimento Web Front-End (Universidade FUMEC). Brechó online de peças únicas, feito em Angular.
+Projeto da disciplina Desenvolvimento Web Front-End (Universidade FUMEC), feito em Angular.
+Esta é a versão do **Trabalho 02**: roteamento, data-binding, diretivas, services e manipulação de dados com mock objects.
 
 **Grupo:** Gabriel Carvalho e Izaque Querino
 
@@ -10,50 +11,49 @@ Precisa do **Node.js 24.15 ou mais novo** (versão LTS em [nodejs.org](https://n
 
 ```bash
 npm install
-npm run dev
+npm start
 ```
 
-O comando `dev` sobe a API (JSON-Server em http://localhost:3000) e o site (http://localhost:4200) juntos.
-Também dá para rodar separado: `npm run api` e `npm start`.
+Depois acesse http://localhost:4200.
 
-**Login de teste:** `admin@garimpo.com` / `admin123` (administrador) ou `cliente@garimpo.com` / `cliente123`.
+Não há API nem banco de dados nesta etapa. Os produtos ficam em um array dentro do `ProdutoService`,
+então o que for cadastrado, editado ou excluído volta aos dados iniciais quando a página é recarregada.
 
-> As contas acima são fictícias e servem só para testar o projeto, que roda localmente. O JSON-Server é uma API de desenvolvimento: guarda as senhas em texto e não tem autenticação no servidor. Em um sistema real, as senhas ficariam criptografadas (hash) em um back-end próprio, que também validaria o acesso ao painel.
+## Páginas
 
-## Telas
-
-| Tela | Rota | Acesso |
+| Página | Rota | O que faz |
 |---|---|---|
-| Início | `/` | Pública |
-| Catálogo (categorias, vintage, favoritos, busca) | `/c/:cat` | Pública |
-| Detalhe do produto | `/produto/:id` | Pública |
-| Sacola | `/sacola` | Pública (finalizar exige login) |
-| Vender peças | `/vender` | Pública |
-| Ajuda | `/ajuda` | Pública |
-| Entrar e criar conta | `/entrar` | Pública |
-| Dashboard de relatórios | `/admin` | Administrador |
-| Gestão de produtos | `/admin/produtos` | Administrador |
-| Cadastro e edição de produto | `/admin/produto/:id` | Administrador |
+| Início | `/` | Apresentação do brechó e link para o catálogo |
+| Produtos | `/produtos` | Lista e pesquisa os produtos |
+| Detalhe do produto | `/produtos/:id` | Mostra as informações de um produto |
+| Gerenciar peças | `/gerenciar` | Cadastra, edita e exclui produtos |
 
 ## Onde está cada requisito
 
-- **Listagem:** `paginas/catalogo.ts` e `admin/produtos.ts`
-- **Detalhe:** `paginas/produto.ts`
-- **Formulários (Reactive Forms):** `paginas/entrar.ts`, `paginas/vender.ts`, `admin/produto-form.ts`
-- **Proteção de rotas:** guard `admin` em `loja.ts` (e login exigido para finalizar a compra na sacola)
-- **Lazy loading:** `loadComponent`/`loadChildren` em `app.routes.ts` e `admin/admin.ts`, `@defer` na home e no dashboard, `loading="lazy"` nas imagens
-- **Dashboard:** `admin/dashboard.ts`
-- **Web API:** JSON-Server (`db.json`) com `HttpClient`/`httpResource` e ViaCEP na sacola
+- **Rotas:** `src/app/app-routing.module.ts` (módulo `AppRoutingModule`)
+- **Menu de navegação com `routerLink`:** `src/app/app.ts`
+- **Funções de navegação:** `router.navigate()` em `pages/catalogo.ts` e `pages/produto.ts`
+- **Service com as regras de negócio:** `src/app/services/produto.service.ts` (`listar`, `buscar`, `pesquisar`, `adicionar`, `atualizar`, `excluir`)
+- **Mock objects:** interface `Produto` e array de produtos fictícios no `ProdutoService`
+- **Data-binding:** interpolação `{{ }}`, property binding `[src]`, event binding `(click)` e two-way binding `[(ngModel)]`
+- **Diretivas:** `ngModel`, `routerLink`, `routerLinkActive` e os blocos de controle `@for`, `@if` e `@empty`
+
+## Imagens
+
+As imagens ficam em `public/img`. Ao cadastrar uma peça, informe o nome do arquivo sem `.jpg` (exemplo: `jaqueta-jeans`).
+Fotos de peças: Clothing Dataset (CC0).
 
 ## Estrutura
 
 ```
-db.json                 dados da API (produtos, usuarios, pedidos, propostas)
-src/app/loja.ts         tipos, estado da loja (sacola, favoritos, usuário) e guards
-src/app/app.routes.ts   rotas com lazy loading
-src/app/card.ts         card de produto
-src/app/paginas/        telas da loja
-src/app/admin/          telas do administrador
+src/app/app.ts                        menu e estrutura principal
+src/app/app-routing.module.ts         rotas das páginas
+src/app/services/produto.service.ts   dados e operações dos produtos
+src/app/pages/home.ts                 página inicial
+src/app/pages/catalogo.ts             listagem e pesquisa
+src/app/pages/produto.ts              detalhe do produto
+src/app/pages/gerenciar.ts            cadastro, edição e exclusão
+src/styles.css                        estilos do site
 ```
 
 ## Git

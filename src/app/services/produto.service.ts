@@ -26,6 +26,15 @@ export class ProdutoService {
     return this.produtos;
   }
 
+  buscar(id: number): Produto | undefined {
+    return this.produtos.find(p => p.id === id);
+  }
+
+  pesquisar(texto: string): Produto[] {
+    const termo = texto.trim().toLowerCase();
+    return this.produtos.filter(p => (p.nome + ' ' + p.categoria).toLowerCase().includes(termo));
+  }
+
   adicionar(produto: Produto): void {
     produto.id = this.proximoId();
     this.produtos.push(produto);
