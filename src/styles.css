@@ -37,6 +37,7 @@ main { min-height: 75vh; }
 .linha-produto { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid #eee; gap: 10px; }
 .link { background: none; border: 0; color: #263bce; cursor: pointer; margin-left: 12px; }
 .excluir { color: #a33a2c; }
+.erro { grid-column: 1 / -1; color: #a33a2c; font-size: 14px; margin: 0; }
 footer { background: #25231f; color: #ddd8cc; text-align: center; padding: 25px; margin-top: 50px; }
 .clicavel { cursor: pointer; transition: transform .15s; }
 .clicavel:hover { transform: translateY(-3px); }

@@ -35,6 +35,7 @@ import { CurrencyPipe } from '@angular/common';
         <label>Descrição
           <input name="descricao" [(ngModel)]="produto.descricao">
         </label>
+        @if (erro) { <p class="erro">Preencha nome, tamanho, imagem e um preço maior que zero.</p> }
         <div class="acoes">
           <button class="botao" type="submit">{{ editando ? 'Salvar alterações' : 'Cadastrar produto' }}</button>
           @if (editando) { <button class="botao secundario" type="button" (click)="limpar()">Cancelar</button> }
@@ -59,6 +60,7 @@ import { CurrencyPipe } from '@angular/common';
 export class Gerenciar implements OnInit {
   produtos = inject(ProdutoService);
   editando = false;
+  erro = false;
   produto: Produto = this.novoProduto();
   private rota = inject(ActivatedRoute);
 
@@ -73,9 +75,8 @@ export class Gerenciar implements OnInit {
   }
 
   salvar(): void {
-    if (!this.produto.nome || !this.produto.tamanho || this.produto.preco <= 0 || !this.produto.imagem) {
-      return;
-    }
+    this.erro = !this.produto.nome || !this.produto.tamanho || this.produto.preco <= 0 || !this.produto.imagem;
+    if (this.erro) return;
 
     if (this.editando) {
       this.produtos.atualizar(this.produto);
@@ -100,5 +101,6 @@ export class Gerenciar implements OnInit {
   limpar(): void {
     this.produto = this.novoProduto();
     this.editando = false;
+    this.erro = false;
   }
 }
