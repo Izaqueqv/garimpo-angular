@@ -1,0 +1,35 @@
+GARIMPO ANGULAR - VERSAO SIMPLIFICADA
+
+O que foi mantido para o Trabalho 02:
+1. Tres paginas: Inicio, Produtos e Gerenciar produtos.
+2. Navegacao usando Angular Router e routerLink.
+3. Data-binding: {{ }}, [src], [(ngModel)] e eventos.
+4. Diretivas: @for e @if.
+5. Service ProdutoService com dados ficticios em um array.
+6. Cadastro, edicao, pesquisa e exclusao de produtos.
+7. Sem API, banco de dados ou json-server.
+
+COMO EXECUTAR
+1. Instale o Node.js e o Angular CLI compativel com o projeto.
+2. Extraia o ZIP.
+3. Abra a pasta no VS Code.
+4. No terminal, execute: npm install
+5. Depois execute: npm start
+6. Acesse o endereco mostrado no terminal (normalmente http://localhost:4200).
+
+IMAGENS
+As imagens estao em public/img. Ao cadastrar uma peca, informe o nome do arquivo sem .jpg.
+Exemplo: jaqueta-jeans
+
+OBSERVACAO
+Os dados ficam em memoria no array do Service. Ao atualizar a pagina, produtos cadastrados
+durante o uso voltam aos dados iniciais. Isso e esperado nesta versao didatica sem banco de dados.
+
+ARQUIVOS PRINCIPAIS
+src/app/app.routes.ts                 - rotas das paginas
+src/app/app.ts                        - menu e estrutura principal
+src/app/services/produto.service.ts   - dados e operacoes dos produtos
+src/app/pages/home.ts                 - pagina inicial
+src/app/pages/catalogo.ts             - listagem e pesquisa
+src/app/pages/gerenciar.ts            - cadastro, edicao e exclusao
+src/styles.css                        - estilos do site
